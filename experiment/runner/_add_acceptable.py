@@ -1,3 +1,8 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
 """
 Adds an `acceptable_findings` field to ground_truth.json for TP cases where the
 SecPriv-Sonnet runs surface additional valid co-findings beyond the single

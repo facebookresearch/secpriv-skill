@@ -1,3 +1,8 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
 """User-events table schema — no retention column, no scheduled deletion."""
 
 from sqlalchemy import Column, create_engine, DateTime, Integer, String

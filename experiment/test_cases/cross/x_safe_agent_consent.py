@@ -1,3 +1,8 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
 """Agent action that requires both a confirmation step AND explicit consent."""
 
 from flask import abort, Flask, jsonify, request

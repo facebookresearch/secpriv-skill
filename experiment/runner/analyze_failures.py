@@ -1,3 +1,8 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
 """
 Inspects results/<config>/run*.json and prints, for each missed TP and each FP,
 the case_id, the unmatched expected/emitted, and a heuristic failure-mode label.

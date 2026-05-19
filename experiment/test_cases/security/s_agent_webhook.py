@@ -1,3 +1,8 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
 """Inbound webhook auto-runs an agent task with no confirmation."""
 
 from flask import Flask, jsonify, request

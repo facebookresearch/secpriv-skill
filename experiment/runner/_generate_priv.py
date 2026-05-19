@@ -1,3 +1,8 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
 """
 Privacy cases: 30 TPs (10 categories x 3 variants each) + 15 near-miss
 TNs (10 calibration + 5 held-out).
