@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  <body>
+    <div id="msg"></div>
+    <script>
+      const params = new URLSearchParams(location.search);
+      const note = params.get("note") || "";
+      // Direct innerHTML assignment of an unsanitized URL parameter —
+      // DOM XSS executes payloads like ?note=<img src=x onerror=alert(1)>.
+      document.getElementById("msg").innerHTML = note;
+    </script>
+  </body>
+</html>

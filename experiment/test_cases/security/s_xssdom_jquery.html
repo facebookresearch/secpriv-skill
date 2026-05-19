@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  <head><script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head>
+  <body>
+    <div id="bio"></div>
+    <script>
+      const bio = new URLSearchParams(location.search).get("bio") || "";
+      // jQuery .html() interprets the argument as HTML; user-controlled
+      // input here is DOM XSS.
+      $("#bio").html(bio);
+    </script>
+  </body>
+</html>

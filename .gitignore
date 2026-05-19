@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Cached evaluation outputs (regenerable via runner/evaluate.py + aggregate.py)
+experiment/results/
+experiment/results_*/
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store

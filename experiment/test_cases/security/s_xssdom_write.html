@@ -1,0 +1,10 @@
+<!doctype html>
+<html>
+  <body>
+    <script>
+      const ref = new URLSearchParams(location.search).get("ref");
+      // document.write of a user-controlled query parameter — DOM XSS.
+      document.write("Welcome from " + ref);
+    </script>
+  </body>
+</html>
