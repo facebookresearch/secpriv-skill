@@ -1,3 +1,10 @@
+<!--
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.
+-->
+
 # SecPriv — Category Selection and Sourcing
 
 This document records, for every category in the benchmark, the public popularity / severity ranking that justifies its inclusion. Reviewers and replicators can verify each ranking against the cited public source. All rankings are stated as of the cited source's publication date; re-running this benchmark in a future year may warrant re-checking the rankings.
