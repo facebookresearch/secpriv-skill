@@ -5,7 +5,6 @@
 
 """Extract a user-uploaded zip to a directory; vulnerable to zip-slip."""
 
-import os
 import zipfile
 
 from flask import Flask, jsonify, request
