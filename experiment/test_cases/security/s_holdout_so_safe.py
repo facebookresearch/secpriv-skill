@@ -5,7 +5,7 @@
 
 """Stored value re-used through the ORM, not raw SQL."""
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from sqlalchemy import Column, create_engine, Integer, select, String
 from sqlalchemy.orm import declarative_base, Session
 
