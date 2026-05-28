@@ -5,7 +5,7 @@
 
 """Newsletter signup requests scope=full_profile but only needs email."""
 
-from flask import Flask, redirect, request
+from flask import Flask, redirect
 
 app = Flask(__name__)
 OAUTH_URL = "https://auth.example.com/authorize"
