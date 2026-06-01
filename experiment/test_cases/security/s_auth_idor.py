@@ -5,7 +5,7 @@
 
 """User can fetch any other user's invoice by guessing the ID."""
 
-from flask import Flask, g, jsonify, request
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
