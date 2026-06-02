@@ -7,7 +7,7 @@
 
 import os
 
-from flask import abort, Flask, request, send_file
+from flask import abort, Flask, send_file
 
 app = Flask(__name__)
 UPLOAD_DIR = os.path.realpath("/var/www/uploads")
