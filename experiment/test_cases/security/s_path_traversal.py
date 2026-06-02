@@ -5,7 +5,7 @@
 
 """Serve user-uploaded files."""
 
-from flask import abort, Flask, request, send_file
+from flask import abort, Flask, send_file
 
 app = Flask(__name__)
 UPLOAD_DIR = "/var/www/uploads"
