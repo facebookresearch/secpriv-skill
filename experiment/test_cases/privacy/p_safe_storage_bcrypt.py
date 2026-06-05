@@ -6,7 +6,7 @@
 """User table stores bcrypt-hashed passwords."""
 
 import bcrypt
-from sqlalchemy import Column, create_engine, Integer, String
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
