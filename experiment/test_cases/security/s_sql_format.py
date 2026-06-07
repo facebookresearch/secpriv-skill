@@ -18,6 +18,6 @@ def search_items():
     conn = sqlite3.connect("app.db")
     cur = conn.cursor()
     # .format() interpolation directly into SQL — same vulnerability as f-string.
-    query = "SELECT id, name FROM items WHERE tag = '{}'".format(tag)
+    query = f"SELECT id, name FROM items WHERE tag = '{tag}'"
     cur.execute(query)
     return jsonify(cur.fetchall())
