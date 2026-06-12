@@ -16,4 +16,4 @@ def run_plugin():
     # __import__ with attacker-controlled name + getattr lets the caller
     # invoke any importable module's entry() function (e.g. os.system).
     mod = __import__(mod_name)
-    return jsonify({"result": getattr(mod, "entry")()})
+    return jsonify({"result": mod.entry()})
