@@ -128,6 +128,12 @@ USER_TEMPLATE = (
     "```python\n{code}\n```\n"
 )
 
+MULTIFILE_INTRO = (
+    "Review the following file(s) for security and privacy issues. Return a JSON "
+    "array per the instructions. Set each finding's `file` to the FILE path shown.\n\n"
+)
+FILE_BLOCK = "FILE: {fname}\n\n```{lang}\n{code}\n```\n"
+
 
 def build_system_prompt(cfg: Config) -> str:
     if cfg.minimal_prompt:
@@ -301,6 +307,7 @@ def normalize_findings(findings: list[dict], aliases: dict[str, str]) -> list[di
                 "line": line,
                 "confidence": conf,
                 "severity": str(f.get("severity", "")).upper(),
+                "file": str(f.get("file", "")).rsplit("/", 1)[-1].strip().lower(),
             }
         )
     return out
@@ -317,6 +324,9 @@ def match_case(emitted: list[dict], expected: list[dict]) -> dict:
             if xi in matched_expected_indices:
                 continue
             if ef["category"] != xf["category"]:
+                continue
+            xfile = str(xf.get("file", "")).rsplit("/", 1)[-1].strip().lower()
+            if xfile and ef.get("file", "") != xfile:
                 continue
             if abs(ef["line"] - int(xf["line"])) > LINE_TOLERANCE:
                 continue
@@ -369,9 +379,21 @@ def run_case(
     aliases: dict[str, str],
     timeout: int = DEFAULT_TIMEOUT,
 ) -> CaseResult:
-    code_path = ROOT / case["file"]
-    code = code_path.read_text()
-    user_prompt = USER_TEMPLATE.format(fname=case["file"], code=code)
+    if case.get("files"):
+        blocks = [
+            FILE_BLOCK.format(
+                fname=Path(rel).name,
+                lang=case.get("lang", "python"),
+                code=(ROOT / rel).read_text(),
+            )
+            for rel in case["files"]
+        ]
+        user_prompt = MULTIFILE_INTRO + "\n\n".join(blocks)
+    else:
+        code = (ROOT / case["file"]).read_text()
+        user_prompt = USER_TEMPLATE.format(fname=case["file"], code=code)
+
+    case_file = case.get("file") or (case.get("files") or [""])[0]
 
     if cfg.union:
         # Run each single-surface skill separately, then union.
@@ -396,7 +418,7 @@ def run_case(
         match = match_case(norm, case["expected_findings"])
         return CaseResult(
             case_id=case["case_id"],
-            file=case["file"],
+            file=case_file,
             kind=case["kind"],
             emitted=norm,
             raw_output="<two_skill: see meta.sub_calls>",
@@ -409,7 +431,7 @@ def run_case(
     if raw is None:
         return CaseResult(
             case_id=case["case_id"],
-            file=case["file"],
+            file=case_file,
             kind=case["kind"],
             raw_output="",
             parse_ok=False,
@@ -422,7 +444,7 @@ def run_case(
     match = match_case(norm, case["expected_findings"])
     return CaseResult(
         case_id=case["case_id"],
-        file=case["file"],
+        file=case_file,
         kind=case["kind"],
         emitted=norm,
         raw_output=raw,

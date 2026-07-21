@@ -20,6 +20,10 @@ experiment/probe_cases/
 experiment/ground_truth_probe.json
 experiment/ground_truth_tnfix.json
 
+# Real-CVE probe (regenerable via runner/ingest_cve.py; pinned to live CVE data)
+experiment/probe_cve/
+experiment/ground_truth_cve.json
+
 # Editor / OS
 .vscode/
 .idea/
