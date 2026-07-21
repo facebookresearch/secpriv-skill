@@ -158,23 +158,42 @@ def _strip_codefence(s: str) -> str:
 
 
 def _extract_json_array(s: str) -> list[dict] | None:
-    """Find the first JSON array in s.  Returns None on failure."""
-    s = _strip_codefence(s)
-    # Greedy match the outermost [...] block.
-    m = re.search(r"\[(?:.|\n)*\]", s)
-    if not m:
-        # Sometimes the model returns just `[]` or a stray scalar.
+    """Extract the model's JSON findings array, tolerant of reasoning prose.
+
+    Models often emit Phase 1-5 reasoning prose and then the array inside a
+    ```json fence at the *end*. We therefore (1) prefer the last fenced block
+    that decodes to a list, then (2) fall back to the last top-level ``[...]``
+    span found via a real JSON decoder (which handles nested brackets/strings),
+    rather than a greedy first-``[``-to-last-``]`` regex that breaks on any
+    stray bracket in the prose."""
+    dec = json.JSONDecoder()
+
+    def _as_list(text: str) -> list[dict] | None:
         try:
-            v = json.loads(s)
-            return v if isinstance(v, list) else None
+            v, _ = dec.raw_decode(text.strip())
         except json.JSONDecodeError:
             return None
-    candidate = m.group(0)
-    try:
-        v = json.loads(candidate)
         return v if isinstance(v, list) else None
-    except json.JSONDecodeError:
-        return None
+
+    fenced = re.findall(r"```(?:json)?\s*(.*?)```", s, re.DOTALL)
+    for block in reversed(fenced):
+        v = _as_list(block)
+        if v is not None:
+            return v
+
+    arrays: list[list[dict]] = []
+    idx = s.find("[")
+    while idx != -1:
+        try:
+            v, end = dec.raw_decode(s[idx:])
+            if isinstance(v, list):
+                arrays.append(v)
+                idx = s.find("[", idx + end)
+                continue
+        except json.JSONDecodeError:
+            pass
+        idx = s.find("[", idx + 1)
+    return arrays[-1] if arrays else None
 
 
 def invoke_model(
@@ -361,7 +380,9 @@ def run_case(
         for skill_path in cfg.skill_paths:
             sub_system = skill_path.read_text()
             raw, m = invoke_model(sub_system, user_prompt, cfg.model, timeout)
-            meta["sub_calls"].append({"skill": skill_path.name, "meta": m})
+            meta["sub_calls"].append(
+                {"skill": skill_path.name, "meta": m, "raw": raw or ""}
+            )
             if raw is None:
                 continue
             arr = _extract_json_array(raw)
@@ -580,11 +601,31 @@ def main() -> None:
         help="Concurrent cases via ThreadPoolExecutor (1 = sequential). Same "
         "token cost, ~N x faster wall-clock; keep under the API rate limit.",
     )
+    ap.add_argument(
+        "--model",
+        default=None,
+        help="Override the config's model alias (e.g. haiku, sonnet). "
+        "Default: the config's own model.",
+    )
+    ap.add_argument(
+        "--skill",
+        default=None,
+        help="Override the unified skill file (SKILL.md) for non-union configs.",
+    )
+    ap.add_argument(
+        "--gt",
+        default=None,
+        help="Override ground-truth JSON path (default: ground_truth.json).",
+    )
     args = ap.parse_args()
 
     cfg = load_config(args.config)
+    if args.model:
+        cfg.model = args.model
+    if args.skill and not cfg.union and not cfg.minimal_prompt:
+        cfg.skill_paths = [Path(args.skill)]
     aliases = _load_aliases()
-    gt = json.loads(GT_PATH.read_text())
+    gt = json.loads((Path(args.gt) if args.gt else GT_PATH).read_text())
     cases = gt["cases"]
     if args.only_tn:
         cases = [c for c in cases if c["kind"].endswith("_tn")]

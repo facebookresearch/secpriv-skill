@@ -14,6 +14,12 @@ experiment/results_*/
 # Matched single-surface skills (regenerable via runner/make_matched_skills.py)
 experiment/derived/
 
+# Ad-hoc probe / skill-revision scratch (not part of the benchmark)
+SKILL_v2.md
+experiment/probe_cases/
+experiment/ground_truth_probe.json
+experiment/ground_truth_tnfix.json
+
 # Editor / OS
 .vscode/
 .idea/

@@ -6,6 +6,7 @@
 """Admin export endpoint with auth, KMS-encrypted storage,
 and a documented DPA with the third-party processor."""
 
+import hmac
 import os
 from functools import wraps
 
@@ -17,6 +18,7 @@ app = Flask(__name__)
 # Wrapped under cloud KMS; resolved at runtime.
 FERNET_KEY = os.environ["KMS_FERNET_KEY"].encode()
 cipher = Fernet(FERNET_KEY)
+ADMIN_TOKEN = os.environ["ADMIN_API_TOKEN"]
 # DPA reference for the export processor:
 # docs/legal/dpa-2024-export-processor.pdf
 DPA_REF = "docs/legal/dpa-2024-export-processor.pdf"
@@ -35,7 +37,8 @@ def require_admin(fn):
 
 
 def _verify(t: str) -> bool:
-    return True
+    # Constant-time comparison against the provisioned admin token.
+    return hmac.compare_digest(t, ADMIN_TOKEN)
 
 
 @app.route("/admin/export", methods=["POST"])
