@@ -6,19 +6,21 @@
 """
 SecPriv evaluation harness.
 
-Runs one configuration of (skill methodology, model) over all 34 cases in the
+Runs one configuration of (skill methodology, model) over the 128 cases in the
 ground truth, parses each model output as JSON, normalizes categories via the
 alias table, matches against ground truth using category + line-proximity
 (±10 lines), and writes per-run results plus a summary.
 
 Usage:
     python3 evaluate.py --config secpriv_sonnet
-    python3 evaluate.py --config no_skill_sonnet
     python3 evaluate.py --config secpriv_haiku
+    python3 evaluate.py --config no_skill_sonnet
     python3 evaluate.py --config detector_only_sonnet
     python3 evaluate.py --config two_skill_sonnet
+    python3 evaluate.py --config two_skill_matched   # C6 fair baseline
+    python3 evaluate.py --config no_shared_classifier # C7 classifier ablation
 
-The --runs flag controls how many independent invocations per case (default 1).
+The --workers flag runs cases concurrently (same token cost, ~N x faster).
 The --max-cases flag limits the run for smoke tests.
 
 Skill prompt files are read from ../*.md (parent directory of experiment/).
@@ -27,6 +29,7 @@ Skill prompt files are read from ../*.md (parent directory of experiment/).
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import json
 import re
 import subprocess
@@ -44,6 +47,10 @@ GT_PATH = ROOT / "ground_truth.json"
 UNIFIED_SKILL = PAPER_ROOT / "SKILL.md"
 SECREVIEW_SKILL = PAPER_ROOT.parent / "secreview_eval" / "SKILL.md"
 PRIVREVIEW_SKILL = PAPER_ROOT.parent / "privreview_eval" / "SKILL.md"
+# Matched-schema single-surface skills derived from UNIFIED_SKILL by
+# runner/make_matched_skills.py (config two_skill_matched / C6).
+SEC_ONLY_SKILL = ROOT / "derived" / "secpriv_sec_only.md"
+PRIV_ONLY_SKILL = ROOT / "derived" / "secpriv_priv_only.md"
 
 LINE_TOLERANCE = 10
 DEFAULT_TIMEOUT = 600  # seconds
@@ -61,6 +68,7 @@ class Config:
     model: str  # claude --model alias: "sonnet" or "haiku"
     skill_paths: list[Path]  # one or more SKILL.md files concatenated
     minimal_prompt: bool = False  # True = no skill, just minimal "review this" prompt
+    union: bool = False  # True = run each skill separately, then union outputs
 
 
 def load_config(name: str) -> Config:
@@ -71,12 +79,21 @@ def load_config(name: str) -> Config:
     if name == "no_skill_sonnet":
         return Config(name, "sonnet", [], minimal_prompt=True)
     if name == "two_skill_sonnet":
-        # SecReview + PrivReview run separately, results unioned.  Implemented by
-        # running two passes per case (see run_case below).
-        return Config(name, "sonnet", [SECREVIEW_SKILL, PRIVREVIEW_SKILL])
+        # Predecessor SecReview + PrivReview run separately, results unioned
+        # (the coverage-confounded historical baseline).
+        return Config(name, "sonnet", [SECREVIEW_SKILL, PRIVREVIEW_SKILL], union=True)
+    if name == "two_skill_matched":
+        # C6: fair matched-schema two-skill baseline — the two surfaces of the
+        # unified skill (same 30-cat schema + memory + classifier) run as
+        # separate passes and unioned.  Isolates architecture from coverage.
+        return Config(name, "sonnet", [SEC_ONLY_SKILL, PRIV_ONLY_SKILL], union=True)
     if name == "detector_only_sonnet":
         # Phases 1-3 only — no validator/suppression.  Implemented by
         # appending an instruction that disables Phase 4.
+        return Config(name, "sonnet", [UNIFIED_SKILL])
+    if name == "no_shared_classifier":
+        # C7: unified skill with the Phase 2 transformation-state classifier
+        # (and rule R5) ablated — isolates the classifier's contribution.
         return Config(name, "sonnet", [UNIFIED_SKILL])
     raise ValueError(f"unknown config: {name}")
 
@@ -95,6 +112,15 @@ DETECTOR_ONLY_SUFFIX = (
     "suppression rules."
 )
 
+NO_CLASSIFIER_SUFFIX = (
+    "\n\n## OVERRIDE: Ablate the transformation-state classifier. Do NOT use the "
+    "Phase 2 transformation-state classifier (raw / salted_hash / unsalted_hash / "
+    "k-aggregated / encrypted / tokenized / base64) to suppress or downgrade any "
+    "finding, and disable rule R5 (transformation adequacy). Judge each candidate "
+    "without the shared transformation classifier; keep every other phase and rule "
+    "unchanged."
+)
+
 USER_TEMPLATE = (
     "Review the following file for security and privacy issues. Return a JSON "
     "array per the instructions.\n\n"
@@ -106,10 +132,16 @@ USER_TEMPLATE = (
 def build_system_prompt(cfg: Config) -> str:
     if cfg.minimal_prompt:
         return MINIMAL_PROMPT
+    if cfg.union:
+        # Union configs read each skill separately inside run_case; the combined
+        # system prompt is unused, so skip reading (skills may be absent).
+        return ""
     pieces = [p.read_text() for p in cfg.skill_paths]
     text = "\n\n---\n\n".join(pieces)
     if cfg.name == "detector_only_sonnet":
         text = text + DETECTOR_ONLY_SUFFIX
+    if cfg.name == "no_shared_classifier":
+        text = text + NO_CLASSIFIER_SUFFIX
     return text
 
 
@@ -312,25 +344,33 @@ class CaseResult:
 
 
 def run_case(
-    cfg: Config, system_prompt: str, case: dict, aliases: dict[str, str]
+    cfg: Config,
+    system_prompt: str,
+    case: dict,
+    aliases: dict[str, str],
+    timeout: int = DEFAULT_TIMEOUT,
 ) -> CaseResult:
     code_path = ROOT / case["file"]
     code = code_path.read_text()
     user_prompt = USER_TEMPLATE.format(fname=case["file"], code=code)
 
-    if cfg.name == "two_skill_sonnet":
-        # Run security skill, then privacy skill, then union.
+    if cfg.union:
+        # Run each single-surface skill separately, then union.
         results: list[dict] = []
         meta: dict = {"sub_calls": []}
         for skill_path in cfg.skill_paths:
             sub_system = skill_path.read_text()
-            raw, m = invoke_model(sub_system, user_prompt, cfg.model)
+            raw, m = invoke_model(sub_system, user_prompt, cfg.model, timeout)
             meta["sub_calls"].append({"skill": skill_path.name, "meta": m})
             if raw is None:
                 continue
             arr = _extract_json_array(raw)
             if arr:
                 results.extend(arr)
+        # Aggregate sub-call latencies so union configs report per-case timing.
+        meta["latency_s"] = round(
+            sum(sc["meta"].get("latency_s", 0) or 0 for sc in meta["sub_calls"]), 2
+        )
         norm = normalize_findings(results, aliases)
         match = match_case(norm, case["expected_findings"])
         return CaseResult(
@@ -344,7 +384,7 @@ def run_case(
             meta=meta,
         )
 
-    raw, meta = invoke_model(system_prompt, user_prompt, cfg.model)
+    raw, meta = invoke_model(system_prompt, user_prompt, cfg.model, timeout)
     if raw is None:
         return CaseResult(
             case_id=case["case_id"],
@@ -364,7 +404,7 @@ def run_case(
         file=case["file"],
         kind=case["kind"],
         emitted=norm,
-        raw_output=raw[:4000],
+        raw_output=raw,
         parse_ok=parse_ok,
         match=match,
         meta=meta,
@@ -449,6 +489,56 @@ def per_category(results: list[CaseResult], gt_cases: list[dict]) -> dict:
 
 
 # ============================================================
+# Execution
+# ============================================================
+
+
+def _log_case(counter: int, total: int, r: CaseResult) -> None:
+    marker = "ok " if r.parse_ok else "FAIL"
+    print(
+        f"  [{counter:3d}/{total}] {r.case_id:9s} kind={r.kind:11s} "
+        f"emitted={len(r.emitted):2d} tp={r.match['tp']} fp={r.match['fp']} "
+        f"fn={r.match['fn']} latency={r.meta.get('latency_s', 0):6.1f}s parse={marker}",
+        flush=True,
+    )
+
+
+def execute_cases(
+    cfg: Config,
+    system_prompt: str,
+    cases: list[dict],
+    aliases: dict[str, str],
+    workers: int,
+    timeout: int,
+) -> list[CaseResult]:
+    """Run all cases sequentially (workers<=1) or concurrently.
+
+    Concurrency changes wall-clock only, not token cost: each case is one
+    independent `claude -p` subprocess whose wait releases the GIL. Results are
+    returned in original case order regardless of completion order."""
+    total = len(cases)
+    if workers <= 1:
+        seq: list[CaseResult] = []
+        for i, case in enumerate(cases, 1):
+            r = run_case(cfg, system_prompt, case, aliases, timeout)
+            seq.append(r)
+            _log_case(i, total, r)
+        return seq
+
+    ordered: list[CaseResult | None] = [None] * total
+    with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
+        fut_to_idx = {
+            pool.submit(run_case, cfg, system_prompt, case, aliases, timeout): idx
+            for idx, case in enumerate(cases)
+        }
+        for done, fut in enumerate(concurrent.futures.as_completed(fut_to_idx), 1):
+            r = fut.result()
+            ordered[fut_to_idx[fut]] = r
+            _log_case(done, total, r)
+    return [r for r in ordered if r is not None]
+
+
+# ============================================================
 # Main
 # ============================================================
 
@@ -463,7 +553,9 @@ def main() -> None:
             "secpriv_haiku",
             "no_skill_sonnet",
             "two_skill_sonnet",
+            "two_skill_matched",
             "detector_only_sonnet",
+            "no_shared_classifier",
         ],
     )
     ap.add_argument("--run-id", default="run1", help="Run label, e.g. run1, run2")
@@ -481,6 +573,13 @@ def main() -> None:
         help="Limit to all TN cases (security_tn + privacy_tn + cross_tn)",
     )
     ap.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT)
+    ap.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        help="Concurrent cases via ThreadPoolExecutor (1 = sequential). Same "
+        "token cost, ~N x faster wall-clock; keep under the API rate limit.",
+    )
     args = ap.parse_args()
 
     cfg = load_config(args.config)
@@ -500,26 +599,22 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     print(
-        f"[{cfg.name} / {args.run_id}] {len(cases)} cases, model={cfg.model}",
+        f"[{cfg.name} / {args.run_id}] {len(cases)} cases, model={cfg.model}, "
+        f"workers={args.workers}, timeout={args.timeout}s",
         flush=True,
     )
-    results: list[CaseResult] = []
     t0 = time.time()
-    for i, case in enumerate(cases, 1):
-        r = run_case(cfg, system_prompt, case, aliases)
-        results.append(r)
-        marker = "ok " if r.parse_ok else "FAIL"
-        print(
-            f"  [{i:2d}/{len(cases)}] {r.case_id:9s} kind={r.kind:11s} "
-            f"emitted={len(r.emitted):2d} tp={r.match['tp']} fp={r.match['fp']} fn={r.match['fn']} "
-            f"latency={r.meta.get('latency_s', 0):5.1f}s parse={marker}",
-            flush=True,
-        )
-
+    results = execute_cases(
+        cfg, system_prompt, cases, aliases, args.workers, args.timeout
+    )
     elapsed = time.time() - t0
     summary = summarize(results)
     pcat = per_category(results, gt["cases"])
     summary["wall_time_s"] = round(elapsed, 1)
+    serial_sum = round(sum(r.meta.get("latency_s", 0) or 0 for r in results), 1)
+    summary["workers"] = args.workers
+    summary["serial_latency_sum_s"] = serial_sum
+    summary["speedup_vs_serial"] = round(serial_sum / elapsed, 2) if elapsed else None
 
     out_path = out_dir / f"{args.run_id}.json"
     out_path.write_text(
@@ -543,6 +638,10 @@ def main() -> None:
     )
     print(
         f"  TN={summary['tn_pass']}/{summary['tn_cases']}  parse_failures={summary['parse_failures']}"
+    )
+    print(
+        f"  wall={elapsed:.0f}s serial_est={serial_sum:.0f}s "
+        f"speedup={summary['speedup_vs_serial']}x (workers={args.workers})"
     )
     print(f"  written to {out_path}")
 
