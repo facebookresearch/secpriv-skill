@@ -68,6 +68,7 @@ class Config:
     model: str  # claude --model alias: "sonnet" or "haiku"
     skill_paths: list[Path]  # one or more SKILL.md files concatenated
     minimal_prompt: bool = False  # True = no skill, just minimal "review this" prompt
+    conservative: bool = False  # True = minimal prompt + a "be careful" instruction
     union: bool = False  # True = run each skill separately, then union outputs
 
 
@@ -78,6 +79,10 @@ def load_config(name: str) -> Config:
         return Config(name, "haiku", [UNIFIED_SKILL])
     if name == "no_skill_sonnet":
         return Config(name, "sonnet", [], minimal_prompt=True)
+    if name == "no_skill_conservative":
+        # Naked LLM + a one-paragraph "be careful" instruction.  Tests whether
+        # SecPriv's precision is reproducible by conservatism alone (no skill).
+        return Config(name, "sonnet", [], minimal_prompt=True, conservative=True)
     if name == "two_skill_sonnet":
         # Predecessor SecReview + PrivReview run separately, results unioned
         # (the coverage-confounded historical baseline).
@@ -104,6 +109,18 @@ MINIMAL_PROMPT = (
     "fields: surface (security|privacy), category, severity (HIGH|MEDIUM|LOW), "
     "confidence (0.0-1.0), file, line, description. Return only the JSON array; no "
     "prose. If nothing is wrong, return []."
+)
+
+CONSERVATIVE_PROMPT = (
+    MINIMAL_PROMPT
+    + " Be conservative: report a finding ONLY if you can construct a concrete "
+    "end-to-end exploitation path (security) or personal-data-exposure path "
+    "(privacy) with no protective transformation or framework defense on it, and "
+    "only at confidence >= 0.8. Treat the following as adequate protections and do "
+    "NOT flag code they cover: parameterized queries / ORMs, framework "
+    "auto-escaping, salted-hash / KMS-encryption / vault-tokenization / k>=5 "
+    "aggregation, secrets read from environment variables, and declared "
+    "access-control decorators or middleware. When in doubt, do not report."
 )
 
 DETECTOR_ONLY_SUFFIX = (
@@ -137,7 +154,7 @@ FILE_BLOCK = "FILE: {fname}\n\n```{lang}\n{code}\n```\n"
 
 def build_system_prompt(cfg: Config) -> str:
     if cfg.minimal_prompt:
-        return MINIMAL_PROMPT
+        return CONSERVATIVE_PROMPT if cfg.conservative else MINIMAL_PROMPT
     if cfg.union:
         # Union configs read each skill separately inside run_case; the combined
         # system prompt is unused, so skip reading (skills may be absent).
@@ -595,6 +612,7 @@ def main() -> None:
             "secpriv_sonnet",
             "secpriv_haiku",
             "no_skill_sonnet",
+            "no_skill_conservative",
             "two_skill_sonnet",
             "two_skill_matched",
             "detector_only_sonnet",

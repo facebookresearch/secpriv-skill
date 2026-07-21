@@ -1,0 +1,119 @@
+{
+  "description": "transformation-adequacy micro-benchmark",
+  "cases": [
+    {
+      "case_id": "TA-01",
+      "file": "test_cases/transform/ta_salted_hash_store.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "salted_hash (random per-record salt) vs raw email at DB write"
+    },
+    {
+      "case_id": "TA-02",
+      "file": "test_cases/transform/ta_kms_encrypt_store.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "KMS-encrypted SSN vs cleartext at DB write"
+    },
+    {
+      "case_id": "TA-03",
+      "file": "test_cases/transform/ta_kanon_export.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "k>=5 aggregation vs per-user rows at export"
+    },
+    {
+      "case_id": "TA-04",
+      "file": "test_cases/transform/ta_vault_tokenize.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "vault-tokenized card vs raw PAN in log"
+    },
+    {
+      "case_id": "TA-05",
+      "file": "test_cases/transform/ta_encrypt_thirdparty.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "encrypted-to-recipient payload vs cleartext PII to third party"
+    },
+    {
+      "case_id": "TA-06",
+      "file": "test_cases/transform/ta_bcrypt_password.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "bcrypt+salt vs cleartext password at store"
+    },
+    {
+      "case_id": "TB-01",
+      "file": "test_cases/transform/tb_base64_log.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "pii_leakage",
+          "line": 11
+        }
+      ]
+    },
+    {
+      "case_id": "TB-02",
+      "file": "test_cases/transform/tb_unsalted_hash_store.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "pii_leakage",
+          "line": 8
+        }
+      ]
+    },
+    {
+      "case_id": "TB-03",
+      "file": "test_cases/transform/tb_hex_ssn_store.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "insecure_storage",
+          "line": 5
+        }
+      ]
+    },
+    {
+      "case_id": "TB-04",
+      "file": "test_cases/transform/tb_raw_log.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "pii_leakage",
+          "line": 8
+        }
+      ]
+    },
+    {
+      "case_id": "TC-01",
+      "file": "test_cases/transform/tc_salted_render_safe.py",
+      "kind": "cross_tn",
+      "expected_findings": [],
+      "boundary": "salted_hash field is inert -> neither pii_leak nor stored-XSS"
+    },
+    {
+      "case_id": "TC-02",
+      "file": "test_cases/transform/tc_raw_render_unsafe.py",
+      "kind": "cross_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "pii_leakage",
+          "line": 9
+        },
+        {
+          "surface": "security",
+          "category": "xss",
+          "line": 9
+        }
+      ]
+    }
+  ]
+}

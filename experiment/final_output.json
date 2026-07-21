@@ -1,0 +1,53 @@
+[
+  {
+    "surface": "security",
+    "category": "ssrf",
+    "severity": "HIGH",
+    "confidence": 0.85,
+    "file": "resolve.server.ts",
+    "line": 143,
+    "description": "User-controlled storage_path passed directly to getTensorZeroClient().getObject() without validation or allowlist, enabling SSRF via malicious path values like '../' sequences or absolute paths.",
+    "remediation": "Validate storage_path against a strict allowlist of permitted prefixes (e.g., 'observability/files/') and reject paths containing '..' or absolute paths before passing to getObject().",
+    "cwe": "CWE-918",
+    "exploitation_path": "Attacker provides storage_path like '../../../sensitive/file' → resolveFile() passes directly to getObject() → potential access to unintended storage locations.",
+    "flow_id": "storage_path_validation_1"
+  },
+  {
+    "surface": "security",
+    "category": "insecure_logging",
+    "severity": "MEDIUM",
+    "confidence": 0.82,
+    "file": "resolve.server.ts",
+    "line": 86,
+    "description": "Exception messages from file resolution are returned directly in the response object as error field without sanitization, potentially exposing internal system details, file system structure, or connection strings.",
+    "remediation": "Sanitize error messages by logging the full error internally and returning a generic message to the client (e.g., 'File resolution failed') to prevent information disclosure.",
+    "cwe": "CWE-532",
+    "exploitation_path": "getTensorZeroClient().getObject() throws → error.message directly serialized in content.file_type='object_storage_error' → error field exposed in response.",
+    "flow_id": "error_disclosure_1"
+  },
+  {
+    "surface": "security",
+    "category": "insecure_logging",
+    "severity": "MEDIUM",
+    "confidence": 0.82,
+    "file": "resolve.server.ts",
+    "line": 193,
+    "description": "Exception messages from file resolution are returned directly in the response object as error field without sanitization, potentially exposing internal system details or storage backend information.",
+    "remediation": "Sanitize error messages by logging the full error internally and returning a generic message to the client to prevent information disclosure.",
+    "cwe": "CWE-532",
+    "exploitation_path": "loadStoredInputFileData() catch block → error.message directly assigned to loadFileError.error → exposed in API response.",
+    "flow_id": "error_disclosure_2"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "HIGH",
+    "confidence": 0.88,
+    "file": "resolve.server.ts",
+    "line": 193,
+    "description": "Exception messages from file operations are serialized in error responses without redaction, potentially exposing PII from file paths, system paths, or upstream service details in error messages.",
+    "remediation": "Replace detailed error messages with generic 'File processing failed' responses in API output; log full details server-side with access controls and retention policies.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)",
+    "flow_id": "error_disclosure_2"
+  }
+]

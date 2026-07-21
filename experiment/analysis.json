@@ -1,0 +1,98 @@
+[
+  {
+    "surface": "security",
+    "category": "command_injection",
+    "severity": "HIGH",
+    "confidence": 0.95,
+    "file": "fs.js",
+    "line": 100,
+    "description": "rmrf() constructs shell commands with empty string placeholders ('Remove-Item \\'\\'', 'rm -rf \"\"') that are never populated with the localFolderPath parameter, indicating the parameter is ignored but also revealing incomplete command injection.",
+    "remediation": "Use fss.rm() for Node.js 14.14+, or sanitize paths with path.basename() and validate against a whitelist before passing to shell commands. Preferably, avoid shell execution entirely.",
+    "cwe": "CWE-78",
+    "exploitation_path": "Attacker controls localFolderPath → unsanitized concatenation into shell command → arbitrary command execution"
+  },
+  {
+    "surface": "security",
+    "category": "command_injection",
+    "severity": "HIGH",
+    "confidence": 0.95,
+    "file": "fs.js",
+    "line": 109,
+    "description": "mv() constructs shell commands with empty string placeholders ('Move-Item \\'\\' \\'\\'', 'mv \\'\\' \\'\\'') that are not populated with from/to parameters.",
+    "remediation": "Use fss.rename() instead of shell commands. If shell execution is unavoidable, escape arguments using path.basename() and validate both paths are within allowed directories.",
+    "cwe": "CWE-78",
+    "exploitation_path": "Attacker controls from/to parameters → unescaped shell command execution → arbitrary file operations"
+  },
+  {
+    "surface": "security",
+    "category": "command_injection",
+    "severity": "HIGH",
+    "confidence": 0.95,
+    "file": "fs.js",
+    "line": 119,
+    "description": "cp() constructs shell commands with empty string placeholders ('Copy-Item \\'\\' -Destination \\'\\' -Recurse', 'cp -r \"\" \"\"') that are never populated with from/to parameters.",
+    "remediation": "Use fss.cp() (Node.js 16.7+) instead of shell execution. Alternatively, validate paths are absolute, within allowed directories, and escape special characters before shell execution.",
+    "cwe": "CWE-78",
+    "exploitation_path": "Attacker controls from/to paths → unescaped shell command concatenation → arbitrary file system operations"
+  },
+  {
+    "surface": "security",
+    "category": "path_traversal",
+    "severity": "HIGH",
+    "confidence": 0.92,
+    "file": "fs.js",
+    "line": 165,
+    "description": "unzipFile() extracts tar archives to targetFolderPath without validating that extracted paths remain within the target directory, enabling zip-slip attacks where a malicious tar contains relative paths like '../../../etc/passwd'.",
+    "remediation": "After tar extraction, validate all created file paths with path.resolve() and path.relative() to ensure they reside within targetFolderPath. Reject extraction if any path escapes the target directory. Consider using tar with explicit entry filtering.",
+    "cwe": "CWE-22",
+    "exploitation_path": "Attacker provides tar file with entries like '../evil.sh' → tar.x() extracts outside targetFolderPath → arbitrary files written to system"
+  },
+  {
+    "surface": "security",
+    "category": "command_injection",
+    "severity": "HIGH",
+    "confidence": 0.90,
+    "file": "fs.js",
+    "line": 95,
+    "description": "getFolderSize() calls run() with shell commands containing empty string placeholders ('du -sh \"\" && find \"\" -type f | wc -l') that are not substituted with the folderPath parameter, making the function ineffective and revealing incomplete command injection.",
+    "remediation": "Populate the shell command placeholders with folderPath, then validate it is absolute and within allowed directories using path.resolve() and prefix containment checks. Better: use fss-based traversal instead of shell commands.",
+    "cwe": "CWE-78",
+    "exploitation_path": "Command placeholders are never substituted, but pattern indicates incomplete implementation vulnerable to future exploitation if fixed without sanitization"
+  },
+  {
+    "surface": "security",
+    "category": "path_traversal",
+    "severity": "MEDIUM",
+    "confidence": 0.88,
+    "file": "fs.js",
+    "line": 137,
+    "description": "openFile() passes localFilePath to PowerShell Invoke-Item or xdg-open without validating it is an absolute path within an allowed directory, enabling attackers to open arbitrary files.",
+    "remediation": "Validate localFilePath is absolute using path.isAbsolute(), resolve it with path.resolve(), then verify it stays within an allowed base directory before executing open. Reject relative paths.",
+    "cwe": "CWE-22",
+    "exploitation_path": "Attacker passes '../../../etc/passwd' → encoded and passed to xdg-open → arbitrary file opened, potentially leaking contents"
+  },
+  {
+    "surface": "security",
+    "category": "command_injection",
+    "severity": "MEDIUM",
+    "confidence": 0.85,
+    "file": "fs.js",
+    "line": 183,
+    "description": "listWindowsRootPath() executes PowerShell via exec() to enumerate drives. While output is regex-filtered, the underlying exec() call is vulnerable if any component is attacker-controlled. Filters against </\\|?* but does not prevent all injections.",
+    "remediation": "Avoid exec() for system enumeration; use native APIs like require('child_process').execFile() or the 'drivelist' npm package. If exec() is necessary, use strict allowlists and avoid any user-controlled input.",
+    "cwe": "CWE-78",
+    "exploitation_path": "If command string ever becomes attacker-controlled, exec() with shell=true executes arbitrary PowerShell"
+  },
+  {
+    "surface": "security",
+    "category": "insecure_logging",
+    "severity": "MEDIUM",
+    "confidence": 0.82,
+    "file": "fs.js",
+    "line": 74,
+    "description": "spawnDetachedCommand() logs full stderr output (stderr.trim()) in error messages, which may contain sensitive paths, API keys, or system information from command output.",
+    "remediation": "Log only error codes and generic messages. Redact or omit stderr content, or hash sensitive path components before logging.",
+    "cwe": "CWE-532",
+    "exploitation_path": "stderr from failed command execution → logged with paths/secrets → exposed in application logs"
+  }
+]
