@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "surface": "security",
+    "category": "second_order_sqli",
+    "severity": "MEDIUM",
+    "confidence": 0.82,
+    "file": "sql_chat_agent.py",
+    "line": 642,
+    "description": "LLM-generated SQL executed via text() without bind parameters; LLM can be prompt-injected via attacker-controlled database contents to generate queries with time-delay functions (pg_sleep, SLEEP) or subqueries accessing unauthorized tables, bypassing statement-type validation.",
+    "remediation": "Add pattern-based blocking for time-delay functions (pg_sleep, SLEEP, BENCHMARK) to _DANGEROUS_SQL_PATTERNS; consider mandatory query preview with human confirmation for non-SELECT statements; implement query result sanitization before returning to LLM context to prevent second-order prompt injection.",
+    "cwe": "CWE-89",
+    "exploitation_path": "Attacker stores prompt-injection payload in database field → Agent reads field → LLM incorporates payload into next query generation → LLM generates SELECT with pg_sleep(10) → Query passes validation (valid SELECT, no pattern match) → execute(text(query)) runs 10-second delay",
+    "flow_id": "sql_injection_flow"
+  },
+  {
+    "surface": "security",
+    "category": "insecure_logging",
+    "severity": "MEDIUM",
+    "confidence": 0.90,
+    "file": "sql_chat_agent.py",
+    "line": 638,
+    "description": "Full SQL queries logged via logger.info and logger.error, exposing queries that may contain PII in WHERE clauses (email, SSN, name) or sensitive authentication tokens in query predicates.",
+    "remediation": "Redact query parameter values before logging; log only the query structure or a sanitized version with placeholders; alternatively, log only a query hash and store full queries in a secure audit system with restricted access.",
+    "cwe": "CWE-532",
+    "flow_id": "query_logging_flow"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "HIGH",
+    "confidence": 0.90,
+    "file": "sql_chat_agent.py",
+    "line": 638,
+    "description": "SQL queries containing personal data (email addresses, names, national IDs in WHERE clauses) written to application logs without redaction, violating data minimization and confidentiality principles.",
+    "remediation": "Implement query parameter redaction before logging; use a salted hash of sensitive predicates or log only query structure; ensure application logs are not retained longer than necessary and are protected with appropriate access controls.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)",
+    "flow_id": "query_logging_flow"
+  },
+  {
+    "surface": "privacy",
+    "category": "data_retention",
+    "severity": "MEDIUM",
+    "confidence": 0.80,
+    "file": "sql_chat_agent.py",
+    "line": 111,
+    "description": "Query results containing PII stored in chat history without mandatory TTL; max_retained_tokens config is optional (defaults to None), allowing indefinite retention of personal data in conversation context.",
+    "remediation": "Set a default value for max_retained_tokens appropriate for the use case; implement automatic purging of chat history older than retention policy; add per-session TTL tracking and enforce deletion of PII-bearing query results after session expiry.",
+    "regulatory_basis": "GDPR Art. 5(1)(e)"
+  }
+]

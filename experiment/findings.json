@@ -1,0 +1,79 @@
+[
+  {
+    "surface": "security",
+    "category": "path_traversal",
+    "severity": "HIGH",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 103,
+    "description": "Directory name from filesystem used in path construction without validation; attacker can create directory named '..' to traverse outside importDir.",
+    "remediation": "Validate directory names against path traversal sequences using filepath.Clean + realpath containment check before path construction.",
+    "cwe": "CWE-22",
+    "exploitation_path": "Attacker creates directory `importDir/../malicious` → os.ReadDir returns entry with Name() = '..' → path.Join(importDir, '..') escapes intended directory → findDirs reads from parent directory.",
+    "flow_id": "import_path_traversal_1"
+  },
+  {
+    "surface": "security",
+    "category": "path_traversal",
+    "severity": "HIGH",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 131,
+    "description": "File opened with path constructed from unvalidated filesystem directory and file names; enables arbitrary file read.",
+    "remediation": "Resolve all path components with filepath.Clean, verify the resolved path starts with importDir using strings.HasPrefix after both are passed through filepath.Abs.",
+    "cwe": "CWE-22",
+    "exploitation_path": "Directory/file names containing '..' sequences → path.Join constructs path outside importDir → os.Open reads arbitrary files → content imported into database.",
+    "flow_id": "import_path_traversal_2"
+  },
+  {
+    "surface": "security",
+    "category": "path_traversal",
+    "severity": "HIGH",
+    "confidence": 0.85,
+    "file": "migrate.go",
+    "line": 175,
+    "description": "Database fields user.Username and book.Slug used in path construction without sanitization; database compromise allows arbitrary file write.",
+    "remediation": "Validate Username and Slug against path traversal patterns (reject if contains '..' or path separators) or use filepath.Clean + realpath containment check.",
+    "cwe": "CWE-22",
+    "exploitation_path": "Attacker with database write access sets Username='../..' → path.Join(exportDir, '../..', slug) writes files outside exportDir → arbitrary file overwrite.",
+    "flow_id": "export_path_traversal_1"
+  },
+  {
+    "surface": "security",
+    "category": "path_traversal",
+    "severity": "HIGH",
+    "confidence": 0.85,
+    "file": "migrate.go",
+    "line": 262,
+    "description": "Database fields user.Username and book.Slug used in filepath.Join without sanitization in V1 export; enables arbitrary file write.",
+    "remediation": "Validate Username and Slug against path traversal patterns or use filepath.Clean + realpath containment check before path operations.",
+    "cwe": "CWE-22",
+    "exploitation_path": "Attacker with database write access sets Username='../../tmp' → filepath.Join(exportDir, '../../tmp', slug) writes to /tmp → arbitrary file write.",
+    "flow_id": "export_v1_path_traversal_1"
+  },
+  {
+    "surface": "security",
+    "category": "path_traversal",
+    "severity": "HIGH",
+    "confidence": 0.9,
+    "file": "migrate.go",
+    "line": 312,
+    "description": "Asset filename validation incomplete; filepath.Base returns '..' when asset.Name is '..', bypassing the check for '.' and '/' only.",
+    "remediation": "Add '..' to the disallowed filename check: if assetFileName == '/' || assetFileName == '.' || assetFileName == '..' || strings.Contains(assetFileName, string(filepath.Separator)).",
+    "cwe": "CWE-22",
+    "exploitation_path": "Attacker sets asset.Name to '..' in database → filepath.Base('..') returns '..' → check at line 308 only blocks '.' and '/' → filepath.Join(noteDir, '..') writes file to parent directory.",
+    "flow_id": "asset_path_traversal_v1"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.9,
+    "file": "migrate.go",
+    "line": 92,
+    "description": "Username (online identifier PII) and userID logged together in application logs without hashing; pattern repeats throughout file at lines 102, 172, 177, 201, 259, 267, 296.",
+    "remediation": "Log salted hash of username instead of plaintext, or use an opaque correlation ID that maps to username only in access-controlled audit tables.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)",
+    "flow_id": "username_logging"
+  }
+]

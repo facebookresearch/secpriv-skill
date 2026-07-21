@@ -3,11 +3,10 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-"""SOAP request handler using xml.etree without entity protection."""
-
-import xml.etree.ElementTree as ET
+"""SOAP request handler that parses XML with external entities enabled."""
 
 from flask import Flask, jsonify, request
+from lxml import etree
 
 app = Flask(__name__)
 
@@ -15,9 +14,9 @@ app = Flask(__name__)
 @app.route("/soap", methods=["POST"])
 def soap():
     body = request.data
-    # ET.fromstring uses the default expat parser; while modern Python
-    # disables entity expansion by default, the fact that the server
-    # accepts raw XML with no schema validation means malicious DTDs
-    # ship straight through. This mirrors the historical SOAP XXE pattern.
-    tree = ET.fromstring(body)
-    return jsonify({"action": tree.find(".//action").text})
+    # Parser explicitly resolves external entities and allows network
+    # access, so a malicious DTD in the SOAP body can read local files
+    # (file:///etc/passwd) or trigger SSRF — a genuine XXE.
+    parser = etree.XMLParser(resolve_entities=True, no_network=False, load_dtd=True)
+    tree = etree.fromstring(body, parser)
+    return jsonify({"action": tree.findtext(".//action")})

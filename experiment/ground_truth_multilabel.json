@@ -1,0 +1,1887 @@
+{
+  "schema_version": "1.0",
+  "description": "SecPriv combined benchmark \u2014 128 cases.",
+  "cases": [
+    {
+      "case_id": "S-TP-01",
+      "file": "test_cases/security/s_sql_fstring.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "sql_injection",
+          "line": 19,
+          "cwe": "CWE-89",
+          "severity": "HIGH"
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "S-TP-02",
+      "file": "test_cases/security/s_cmd_subprocess.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "command_injection",
+          "line": 16,
+          "cwe": "CWE-78",
+          "severity": "HIGH"
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "S-TP-03",
+      "file": "test_cases/security/s_path_traversal.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "path_traversal",
+          "line": 11,
+          "cwe": "CWE-22",
+          "severity": "HIGH"
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "S-TP-04",
+      "file": "test_cases/security/s_xss_jinja.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "xss",
+          "line": 9,
+          "cwe": "CWE-79",
+          "severity": "HIGH"
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "S-TP-05",
+      "file": "test_cases/security/s_auth_bypass.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 26,
+          "cwe": "CWE-287",
+          "severity": "HIGH"
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "S-TP-06",
+      "file": "test_cases/security/s_secret_hardcoded.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "hardcoded_secret",
+          "line": 5,
+          "cwe": "CWE-798",
+          "severity": "HIGH"
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "S-TP-07",
+      "file": "test_cases/security/s_pickle.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "deserialization",
+          "line": 14,
+          "cwe": "CWE-502",
+          "severity": "HIGH"
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "S-TP-08",
+      "file": "test_cases/security/s_eval.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "eval_injection",
+          "line": 12,
+          "cwe": "CWE-94",
+          "severity": "HIGH"
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "S-TP-09",
+      "file": "test_cases/security/s_loop.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "open_redirect",
+          "line": 21,
+          "cwe": "CWE-835",
+          "severity": "MEDIUM",
+          "relabeled": true
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "S-TP-10",
+      "file": "test_cases/security/s_agent_csrf.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "agent_csrf",
+          "line": 16,
+          "cwe": "CWE-352",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 20,
+          "added": true
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "S-TP-11",
+      "file": "test_cases/security/s_sql_format.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "sql_injection",
+          "line": 14,
+          "cwe": "CWE-89",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-12",
+      "file": "test_cases/security/s_sql_text.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "sql_injection",
+          "line": 14,
+          "cwe": "CWE-89",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-13",
+      "file": "test_cases/security/s_cmd_popen.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "command_injection",
+          "line": 12,
+          "cwe": "CWE-78",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-14",
+      "file": "test_cases/security/s_cmd_system.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "command_injection",
+          "line": 12,
+          "cwe": "CWE-78",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 15,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-15",
+      "file": "test_cases/security/s_path_pathlib.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "path_traversal",
+          "line": 13,
+          "cwe": "CWE-22",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-16",
+      "file": "test_cases/security/s_path_zipslip.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "path_traversal",
+          "line": 15,
+          "cwe": "CWE-22",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-17",
+      "file": "test_cases/security/s_xss_markup.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "xss",
+          "line": 13,
+          "cwe": "CWE-79",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-18",
+      "file": "test_cases/security/s_xss_substitute.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "xss",
+          "line": 13,
+          "cwe": "CWE-79",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-19",
+      "file": "test_cases/security/s_auth_idor.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 19,
+          "cwe": "CWE-639",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-20",
+      "file": "test_cases/security/s_auth_jwt_none.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 13,
+          "cwe": "CWE-287",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "security",
+          "category": "crypto_misuse",
+          "line": 19,
+          "added": true
+        },
+        {
+          "surface": "security",
+          "category": "hardcoded_secret",
+          "line": 12,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-21",
+      "file": "test_cases/security/s_secret_dbpass.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "hardcoded_secret",
+          "line": 5,
+          "cwe": "CWE-798",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-22",
+      "file": "test_cases/security/s_secret_jwtkey.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "hardcoded_secret",
+          "line": 7,
+          "cwe": "CWE-798",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-23",
+      "file": "test_cases/security/s_yaml_load.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "deserialization",
+          "line": 13,
+          "cwe": "CWE-502",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-24",
+      "file": "test_cases/security/s_joblib.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "deserialization",
+          "line": 14,
+          "cwe": "CWE-502",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-25",
+      "file": "test_cases/security/s_exec.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "eval_injection",
+          "line": 13,
+          "cwe": "CWE-94",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 13,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-26",
+      "file": "test_cases/security/s_dynamic_import.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "eval_injection",
+          "line": 13,
+          "cwe": "CWE-94",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 13,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-27",
+      "file": "test_cases/security/s_loop_recursion.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "infinite_loop",
+          "line": 12,
+          "cwe": "CWE-674",
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-28",
+      "file": "test_cases/security/s_loop_retry.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "infinite_loop",
+          "line": 13,
+          "cwe": "CWE-835",
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-29",
+      "file": "test_cases/security/s_agent_webhook.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "agent_csrf",
+          "line": 16,
+          "cwe": "CWE-352",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 19,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-30",
+      "file": "test_cases/security/s_agent_deeplink.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "agent_csrf",
+          "line": 13,
+          "cwe": "CWE-352",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 13,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-31",
+      "file": "test_cases/security/s_so_username.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "second_order_sqli",
+          "line": 23,
+          "cwe": "CWE-89",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 24,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-32",
+      "file": "test_cases/security/s_so_url.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "ssrf",
+          "line": 29,
+          "cwe": "CWE-89",
+          "severity": "HIGH",
+          "relabeled": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-33",
+      "file": "test_cases/security/s_so_template.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "ssti",
+          "line": 32,
+          "cwe": "CWE-89",
+          "severity": "HIGH",
+          "relabeled": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-34",
+      "file": "test_cases/security/s_ssrf_url.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "ssrf",
+          "line": 12,
+          "cwe": "CWE-918",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-35",
+      "file": "test_cases/security/s_ssrf_metadata.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "ssrf",
+          "line": 14,
+          "cwe": "CWE-918",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-36",
+      "file": "test_cases/security/s_ssrf_file.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "ssrf",
+          "line": 14,
+          "cwe": "CWE-918",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-37",
+      "file": "test_cases/security/s_redirect_url.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "open_redirect",
+          "line": 11,
+          "cwe": "CWE-601",
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-38",
+      "file": "test_cases/security/s_redirect_js.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "open_redirect",
+          "line": 12,
+          "cwe": "CWE-601",
+          "severity": "MEDIUM"
+        },
+        {
+          "surface": "security",
+          "category": "xss",
+          "line": 16,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-39",
+      "file": "test_cases/security/s_redirect_oauth.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "open_redirect",
+          "line": 13,
+          "cwe": "CWE-601",
+          "severity": "MEDIUM"
+        },
+        {
+          "surface": "security",
+          "category": "csrf",
+          "line": 17,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-40",
+      "file": "test_cases/security/s_crypto_md5.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "crypto_misuse",
+          "line": 8,
+          "cwe": "CWE-327",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-41",
+      "file": "test_cases/security/s_crypto_iv.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "crypto_misuse",
+          "line": 7,
+          "cwe": "CWE-329",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "security",
+          "category": "hardcoded_secret",
+          "line": 10,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-42",
+      "file": "test_cases/security/s_crypto_random.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "crypto_misuse",
+          "line": 9,
+          "cwe": "CWE-330",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-43",
+      "file": "test_cases/security/s_xxe_lxml.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "xxe",
+          "line": 14,
+          "cwe": "CWE-611",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-44",
+      "file": "test_cases/security/s_xxe_soap.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "xxe",
+          "line": 16,
+          "cwe": "CWE-611",
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-45",
+      "file": "test_cases/security/s_xxe_xinclude.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "xxe",
+          "line": 14,
+          "cwe": "CWE-611",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-46",
+      "file": "test_cases/security/s_ssti_jinja.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "ssti",
+          "line": 13,
+          "cwe": "CWE-1336",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-47",
+      "file": "test_cases/security/s_ssti_mako.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "ssti",
+          "line": 13,
+          "cwe": "CWE-1336",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-48",
+      "file": "test_cases/security/s_ssti_format.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "ssti",
+          "line": 18,
+          "cwe": "CWE-1336",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "security",
+          "category": "hardcoded_secret",
+          "line": 14,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-49",
+      "file": "test_cases/security/s_csrf_missing.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "csrf",
+          "line": 12,
+          "cwe": "CWE-352",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-50",
+      "file": "test_cases/security/s_csrf_samesite.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "csrf",
+          "line": 12,
+          "cwe": "CWE-352",
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-51",
+      "file": "test_cases/security/s_csrf_get_mutation.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "csrf",
+          "line": 12,
+          "cwe": "CWE-352",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 15,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-52",
+      "file": "test_cases/security/s_race_toctou.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "race_condition",
+          "line": 9,
+          "cwe": "CWE-367",
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-53",
+      "file": "test_cases/security/s_race_balance.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "race_condition",
+          "line": 11,
+          "cwe": "CWE-362",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-54",
+      "file": "test_cases/security/s_race_unique.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "race_condition",
+          "line": 10,
+          "cwe": "CWE-362",
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-55",
+      "file": "test_cases/security/s_log_secret.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "insecure_logging",
+          "line": 14,
+          "cwe": "CWE-532",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-56",
+      "file": "test_cases/security/s_log_token.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "insecure_logging",
+          "line": 17,
+          "cwe": "CWE-532",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-57",
+      "file": "test_cases/security/s_log_debug_dump.py",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "insecure_logging",
+          "line": 11,
+          "cwe": "CWE-532",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-58",
+      "file": "test_cases/security/s_xssdom_inner.html",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "xss_dom",
+          "line": 10,
+          "cwe": "CWE-79",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-59",
+      "file": "test_cases/security/s_xssdom_write.html",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "xss_dom",
+          "line": 7,
+          "cwe": "CWE-79",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TP-60",
+      "file": "test_cases/security/s_xssdom_jquery.html",
+      "kind": "security_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "xss_dom",
+          "line": 10,
+          "cwe": "CWE-79",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "S-TN-01",
+      "file": "test_cases/security/s_safe_orm.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "ORM-parameterized SQL vs. raw f-string SQL",
+      "inherited": true
+    },
+    {
+      "case_id": "S-TN-02",
+      "file": "test_cases/security/s_safe_subprocess.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "list-arg subprocess vs. shell=True",
+      "inherited": true
+    },
+    {
+      "case_id": "S-TN-03",
+      "file": "test_cases/security/s_safe_yaml.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "yaml.safe_load vs. yaml.load",
+      "inherited": true
+    },
+    {
+      "case_id": "S-TN-04",
+      "file": "test_cases/security/s_safe_path.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "realpath containment vs. raw concatenation",
+      "inherited": true
+    },
+    {
+      "case_id": "S-TN-05",
+      "file": "test_cases/security/s_safe_auth.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "admin endpoint with @require_admin decorator vs. without",
+      "inherited": true
+    },
+    {
+      "case_id": "S-TN-06",
+      "file": "test_cases/security/s_safe_jsx.tsx",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "React JSX rendering vs. dangerouslySetInnerHTML"
+    },
+    {
+      "case_id": "S-TN-07",
+      "file": "test_cases/security/s_safe_ssrf.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "URL allowlist + private-IP check vs. raw user URL"
+    },
+    {
+      "case_id": "S-TN-08",
+      "file": "test_cases/security/s_safe_redirect.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "url_for() with allowlist vs. arbitrary user URL"
+    },
+    {
+      "case_id": "S-TN-09",
+      "file": "test_cases/security/s_safe_crypto.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "bcrypt + per-record salt vs. MD5/SHA without salt"
+    },
+    {
+      "case_id": "S-TN-10",
+      "file": "test_cases/security/s_safe_xxe.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "resolve_entities=False parser vs. default parser"
+    },
+    {
+      "case_id": "S-TN-11",
+      "file": "test_cases/security/s_holdout_csprng.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "secrets.token_urlsafe vs. random.random()",
+      "holdout": true
+    },
+    {
+      "case_id": "S-TN-12",
+      "file": "test_cases/security/s_holdout_envvar.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "os.environ secret vs. literal in source",
+      "holdout": true
+    },
+    {
+      "case_id": "S-TN-13",
+      "file": "test_cases/security/s_holdout_literal_eval.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "ast.literal_eval vs. eval()",
+      "holdout": true
+    },
+    {
+      "case_id": "S-TN-14",
+      "file": "test_cases/security/s_holdout_csrf_protect.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "@csrf_protect vs. missing CSRF token",
+      "holdout": true
+    },
+    {
+      "case_id": "S-TN-15",
+      "file": "test_cases/security/s_holdout_so_safe.py",
+      "kind": "security_tn",
+      "expected_findings": [],
+      "boundary": "stored field via ORM where() vs. via raw query",
+      "holdout": true
+    },
+    {
+      "case_id": "P-TP-01",
+      "file": "test_cases/privacy/p_log_email.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "pii_leakage",
+          "line": 19,
+          "regulatory_basis": "GDPR Art. 5(1)(f)",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "security",
+          "category": "insecure_logging",
+          "line": 27,
+          "added": true
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "P-TP-02",
+      "file": "test_cases/privacy/p_log_metric.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "pii_leakage",
+          "line": 11,
+          "regulatory_basis": "GDPR Art. 5(1)(f)",
+          "severity": "MEDIUM"
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "P-TP-03",
+      "file": "test_cases/privacy/p_retention_cache.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "data_retention",
+          "line": 9,
+          "regulatory_basis": "GDPR Art. 5(1)(e)",
+          "severity": "MEDIUM"
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "P-TP-04",
+      "file": "test_cases/privacy/p_consent_missing.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "consent_bypass",
+          "line": 22,
+          "regulatory_basis": "GDPR Art. 6",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "privacy",
+          "category": "purpose_creep",
+          "line": 28,
+          "added": true
+        }
+      ],
+      "inherited": true,
+      "acceptable_findings": [
+        {
+          "surface": "privacy",
+          "category": "purpose_creep",
+          "line": 22,
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-05",
+      "file": "test_cases/privacy/p_consent_temporal.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "consent_bypass",
+          "line": 19,
+          "regulatory_basis": "GDPR Art. 7",
+          "severity": "HIGH"
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "P-TP-06",
+      "file": "test_cases/privacy/p_3p_analytics.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "third_party_sharing",
+          "line": 17,
+          "regulatory_basis": "GDPR Art. 28",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "privacy",
+          "category": "consent_bypass",
+          "line": 24,
+          "added": true
+        }
+      ],
+      "inherited": true,
+      "acceptable_findings": [
+        {
+          "surface": "privacy",
+          "category": "consent_bypass",
+          "line": 17,
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-07",
+      "file": "test_cases/privacy/p_reid_unsalted.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "re_identification_risk",
+          "line": 9,
+          "regulatory_basis": "GDPR Art. 4(5)",
+          "severity": "HIGH"
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "P-TP-08",
+      "file": "test_cases/privacy/p_reid_quasi.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "re_identification_risk",
+          "line": 9,
+          "regulatory_basis": "GDPR Art. 4(5)",
+          "severity": "HIGH"
+        }
+      ],
+      "inherited": true,
+      "acceptable_findings": [
+        {
+          "surface": "privacy",
+          "category": "pii_leakage",
+          "line": 11,
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-09",
+      "file": "test_cases/privacy/p_minimization.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "data_minimization",
+          "line": 17,
+          "regulatory_basis": "GDPR Art. 5(1)(c)",
+          "severity": "MEDIUM"
+        },
+        {
+          "surface": "privacy",
+          "category": "pii_leakage",
+          "line": 21,
+          "added": true
+        }
+      ],
+      "inherited": true,
+      "acceptable_findings": [
+        {
+          "surface": "privacy",
+          "category": "consent_bypass",
+          "line": 18,
+          "severity": "MEDIUM"
+        },
+        {
+          "surface": "privacy",
+          "category": "data_retention",
+          "line": 18,
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-10",
+      "file": "test_cases/privacy/p_purpose_creep.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "purpose_creep",
+          "line": 22,
+          "regulatory_basis": "GDPR Art. 5(1)(b)",
+          "severity": "MEDIUM"
+        },
+        {
+          "surface": "privacy",
+          "category": "consent_bypass",
+          "line": 30,
+          "added": true
+        },
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 23,
+          "added": true
+        }
+      ],
+      "inherited": true,
+      "acceptable_findings": [
+        {
+          "surface": "privacy",
+          "category": "consent_bypass",
+          "line": 24,
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-11",
+      "file": "test_cases/privacy/p_log_stack.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "pii_leakage",
+          "line": 19,
+          "regulatory_basis": "GDPR Art. 5(1)(f)",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-12",
+      "file": "test_cases/privacy/p_retention_audit.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "data_retention",
+          "line": 11,
+          "regulatory_basis": "GDPR Art. 5(1)(e)",
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-13",
+      "file": "test_cases/privacy/p_retention_schema.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "data_retention",
+          "line": 9,
+          "regulatory_basis": "GDPR Art. 5(1)(e)",
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-14",
+      "file": "test_cases/privacy/p_consent_commented.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "consent_bypass",
+          "line": 18,
+          "regulatory_basis": "GDPR Art. 7",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-15",
+      "file": "test_cases/privacy/p_3p_ad.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "third_party_sharing",
+          "line": 17,
+          "regulatory_basis": "GDPR Art. 28",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "privacy",
+          "category": "consent_bypass",
+          "line": 24,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-16",
+      "file": "test_cases/privacy/p_3p_crm.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "third_party_sharing",
+          "line": 17,
+          "regulatory_basis": "GDPR Art. 28",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "privacy",
+          "category": "data_minimization",
+          "line": 24,
+          "added": true
+        },
+        {
+          "surface": "privacy",
+          "category": "consent_bypass",
+          "line": 24,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-17",
+      "file": "test_cases/privacy/p_reid_b64.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "re_identification_risk",
+          "line": 9,
+          "regulatory_basis": "GDPR Art. 4(5)",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-18",
+      "file": "test_cases/privacy/p_min_unused_columns.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "data_minimization",
+          "line": 14,
+          "regulatory_basis": "GDPR Art. 5(1)(c)",
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-19",
+      "file": "test_cases/privacy/p_min_oversized_scope.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "data_minimization",
+          "line": 14,
+          "regulatory_basis": "GDPR Art. 5(1)(c)",
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-20",
+      "file": "test_cases/privacy/p_purpose_train.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "purpose_creep",
+          "line": 24,
+          "regulatory_basis": "GDPR Art. 5(1)(b)",
+          "severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-21",
+      "file": "test_cases/privacy/p_purpose_credit.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "purpose_creep",
+          "line": 23,
+          "regulatory_basis": "GDPR Art. 5(1)(b)",
+          "severity": "MEDIUM"
+        },
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 27,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-22",
+      "file": "test_cases/privacy/p_storage_unencrypted.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "insecure_storage",
+          "line": 13,
+          "regulatory_basis": "GDPR Art. 32",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-23",
+      "file": "test_cases/privacy/p_storage_plaintext_pw.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "insecure_storage",
+          "line": 13,
+          "regulatory_basis": "GDPR Art. 32",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-24",
+      "file": "test_cases/privacy/p_storage_no_tls.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "insecure_storage",
+          "line": 7,
+          "regulatory_basis": "GDPR Art. 32",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "security",
+          "category": "hardcoded_secret",
+          "line": 13,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-25",
+      "file": "test_cases/privacy/p_xborder_nosccs.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "cross_border_transfer",
+          "line": 15,
+          "regulatory_basis": "GDPR Art. 44",
+          "severity": "HIGH"
+        },
+        {
+          "surface": "privacy",
+          "category": "third_party_sharing",
+          "line": 23,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-26",
+      "file": "test_cases/privacy/p_xborder_no_adequacy.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "cross_border_transfer",
+          "line": 9,
+          "regulatory_basis": "GDPR Art. 45",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-27",
+      "file": "test_cases/privacy/p_xborder_intragroup.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "cross_border_transfer",
+          "line": 10,
+          "regulatory_basis": "GDPR Art. 47",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-28",
+      "file": "test_cases/privacy/p_erasure_missing.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "right_to_erasure",
+          "line": 21,
+          "regulatory_basis": "GDPR Art. 17",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-29",
+      "file": "test_cases/privacy/p_erasure_softdelete.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "right_to_erasure",
+          "line": 9,
+          "regulatory_basis": "GDPR Art. 17",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TP-30",
+      "file": "test_cases/privacy/p_erasure_no_cascade.py",
+      "kind": "privacy_tp",
+      "expected_findings": [
+        {
+          "surface": "privacy",
+          "category": "right_to_erasure",
+          "line": 8,
+          "regulatory_basis": "GDPR Art. 17",
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "P-TN-01",
+      "file": "test_cases/privacy/p_safe_salted.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "salted vs. unsalted hash",
+      "inherited": true
+    },
+    {
+      "case_id": "P-TN-02",
+      "file": "test_cases/privacy/p_safe_aggregate.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "k-aggregated counts vs. individual records",
+      "inherited": true
+    },
+    {
+      "case_id": "P-TN-03",
+      "file": "test_cases/privacy/p_safe_consent.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "consent verified before send vs. after",
+      "inherited": true
+    },
+    {
+      "case_id": "P-TN-04",
+      "file": "test_cases/privacy/p_safe_same_purpose.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "same-purpose reuse vs. cross-purpose sharing",
+      "inherited": true
+    },
+    {
+      "case_id": "P-TN-05",
+      "file": "test_cases/privacy/p_safe_ttl.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "cache with TTL vs. cache without TTL",
+      "inherited": true
+    },
+    {
+      "case_id": "P-TN-06",
+      "file": "test_cases/privacy/p_safe_3p_hashed.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "hashed identifier sent to 3rd party vs. raw email"
+    },
+    {
+      "case_id": "P-TN-07",
+      "file": "test_cases/privacy/p_safe_xborder.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "EU->US transfer with documented SCCs vs. unsafeguarded"
+    },
+    {
+      "case_id": "P-TN-08",
+      "file": "test_cases/privacy/p_safe_erasure_cascade.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "cascade delete vs. row-only / soft delete"
+    },
+    {
+      "case_id": "P-TN-09",
+      "file": "test_cases/privacy/p_safe_minimized.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "minimized collection vs. excessive collection"
+    },
+    {
+      "case_id": "P-TN-10",
+      "file": "test_cases/privacy/p_safe_storage_bcrypt.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "bcrypt password column vs. plaintext password column"
+    },
+    {
+      "case_id": "P-TN-11",
+      "file": "test_cases/privacy/p_holdout_audit_rotation.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "audit log with rotation policy vs. indefinite",
+      "holdout": true
+    },
+    {
+      "case_id": "P-TN-12",
+      "file": "test_cases/privacy/p_holdout_token_vault.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "tokenized via vault vs. raw identifier",
+      "holdout": true
+    },
+    {
+      "case_id": "P-TN-13",
+      "file": "test_cases/privacy/p_holdout_legitimate.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "documented legitimate interest vs. unconsented processing",
+      "holdout": true
+    },
+    {
+      "case_id": "P-TN-14",
+      "file": "test_cases/privacy/p_holdout_csv_omit.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "email omitted from export vs. exported in clear",
+      "holdout": true
+    },
+    {
+      "case_id": "P-TN-15",
+      "file": "test_cases/privacy/p_holdout_encrypt_cache.py",
+      "kind": "privacy_tn",
+      "expected_findings": [],
+      "boundary": "KMS-encrypted cache vs. plaintext cache",
+      "holdout": true
+    },
+    {
+      "case_id": "X-TP-01",
+      "file": "test_cases/cross/x_admin_pii.py",
+      "kind": "cross_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 14,
+          "cwe": "CWE-287",
+          "severity": "HIGH",
+          "flow_id": "x01-admin"
+        },
+        {
+          "surface": "privacy",
+          "category": "third_party_sharing",
+          "line": 18,
+          "regulatory_basis": "GDPR Art. 28",
+          "severity": "HIGH",
+          "flow_id": "x01-admin"
+        },
+        {
+          "surface": "privacy",
+          "category": "pii_leakage",
+          "line": 25,
+          "added": true
+        }
+      ],
+      "inherited": true,
+      "acceptable_findings": [
+        {
+          "surface": "privacy",
+          "category": "pii_leakage",
+          "line": 17,
+          "severity": "HIGH"
+        }
+      ]
+    },
+    {
+      "case_id": "X-TP-02",
+      "file": "test_cases/cross/x_webhook_unsigned.py",
+      "kind": "cross_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 12,
+          "cwe": "CWE-287",
+          "severity": "HIGH",
+          "flow_id": "x02-webhook"
+        },
+        {
+          "surface": "privacy",
+          "category": "pii_leakage",
+          "line": 14,
+          "regulatory_basis": "GDPR Art. 5(1)(f)",
+          "severity": "HIGH",
+          "flow_id": "x02-webhook"
+        },
+        {
+          "surface": "security",
+          "category": "insecure_logging",
+          "line": 21,
+          "added": true
+        }
+      ],
+      "inherited": true
+    },
+    {
+      "case_id": "X-TN-01",
+      "file": "test_cases/cross/x_safe_admin_hashed.py",
+      "kind": "cross_tn",
+      "expected_findings": [],
+      "boundary": "auth + salted-hash + declared third-party = no security or privacy violation",
+      "inherited": true
+    },
+    {
+      "case_id": "X-TN-02",
+      "file": "test_cases/cross/x_safe_webhook_signed.py",
+      "kind": "cross_tn",
+      "expected_findings": [],
+      "boundary": "signed webhook + hashed-summary log = no security or privacy violation",
+      "inherited": true
+    },
+    {
+      "case_id": "X-TP-03",
+      "file": "test_cases/cross/x_so_pii.py",
+      "kind": "cross_tp",
+      "expected_findings": [
+        {
+          "surface": "security",
+          "category": "second_order_sqli",
+          "line": 26,
+          "cwe": "CWE-89",
+          "severity": "HIGH",
+          "flow_id": "x03-so-pii"
+        },
+        {
+          "surface": "privacy",
+          "category": "pii_leakage",
+          "line": 29,
+          "regulatory_basis": "GDPR Art. 5(1)(f)",
+          "severity": "HIGH",
+          "flow_id": "x03-so-pii"
+        },
+        {
+          "surface": "security",
+          "category": "auth_bypass",
+          "line": 26,
+          "added": true
+        }
+      ]
+    },
+    {
+      "case_id": "X-TN-03",
+      "file": "test_cases/cross/x_safe_agent_consent.py",
+      "kind": "cross_tn",
+      "expected_findings": [],
+      "boundary": "confirmation + consent + declared sink: not agent_csrf, not consent_bypass, not third_party_sharing"
+    },
+    {
+      "case_id": "X-TN-04",
+      "file": "test_cases/cross/x_safe_sql_hashed_li.py",
+      "kind": "cross_tn",
+      "expected_findings": [],
+      "boundary": "parameterized SQL + salted hash + LIA: not sql_injection, not pii_leakage, not consent_bypass"
+    },
+    {
+      "case_id": "X-TN-05",
+      "file": "test_cases/cross/x_safe_dpa_encrypted.py",
+      "kind": "cross_tn",
+      "expected_findings": [],
+      "boundary": "auth + encryption-at-rest + declared DPA processor: no security or privacy violation"
+    }
+  ],
+  "canonical_categories": [
+    "sql_injection",
+    "command_injection",
+    "path_traversal",
+    "xss",
+    "xss_dom",
+    "auth_bypass",
+    "hardcoded_secret",
+    "deserialization",
+    "eval_injection",
+    "infinite_loop",
+    "agent_csrf",
+    "second_order_sqli",
+    "ssrf",
+    "open_redirect",
+    "crypto_misuse",
+    "xxe",
+    "ssti",
+    "csrf",
+    "race_condition",
+    "insecure_logging",
+    "pii_leakage",
+    "data_retention",
+    "consent_bypass",
+    "third_party_sharing",
+    "re_identification_risk",
+    "data_minimization",
+    "purpose_creep",
+    "insecure_storage",
+    "cross_border_transfer",
+    "right_to_erasure"
+  ]
+}

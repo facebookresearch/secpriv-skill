@@ -1,0 +1,145 @@
+[
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 94,
+    "description": "Username (online identifier) logged without hashing in user discovery phase.",
+    "remediation": "Hash username with a random per-session salt before logging, or use a non-reversible user ID reference.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 102,
+    "description": "Username (online identifier) logged without hashing during import operation.",
+    "remediation": "Hash username with a random per-session salt before logging, or use a non-reversible user ID reference.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 127,
+    "description": "Username (online identifier) logged without hashing in import completion message.",
+    "remediation": "Hash username with a random per-session salt before logging, or use a non-reversible user ID reference.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 162,
+    "description": "Username (online identifier) logged without hashing in export start message.",
+    "remediation": "Hash username with a random per-session salt before logging, or use a non-reversible user ID reference.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 173,
+    "description": "Username (online identifier) logged without hashing in path sanitization warning.",
+    "remediation": "Hash username with a random per-session salt before logging, or use a non-reversible user ID reference.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 180,
+    "description": "Username (online identifier) logged without hashing in note export progress message.",
+    "remediation": "Hash username with a random per-session salt before logging, or use a non-reversible user ID reference.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 205,
+    "description": "Username (online identifier) logged without hashing in asset export message.",
+    "remediation": "Hash username with a random per-session salt before logging, or use a non-reversible user ID reference.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 227,
+    "description": "Username (online identifier) logged without hashing in export completion message.",
+    "remediation": "Hash username with a random per-session salt before logging, or use a non-reversible user ID reference.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 267,
+    "description": "Username (online identifier) logged without hashing in V1 export start message.",
+    "remediation": "Hash username with a random per-session salt before logging, or use a non-reversible user ID reference.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 278,
+    "description": "Username (online identifier) logged without hashing in V1 path sanitization warning.",
+    "remediation": "Hash username with a random per-session salt before logging, or use a non-reversible user ID reference.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 287,
+    "description": "Username (online identifier) logged without hashing in V1 note export progress message.",
+    "remediation": "Hash username with a random per-session salt before logging, or use a non-reversible user ID reference.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 318,
+    "description": "Username (online identifier) logged without hashing in V1 asset export message.",
+    "remediation": "Hash username with a random per-session salt before logging, or use a non-reversible user ID reference.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)"
+  },
+  {
+    "surface": "privacy",
+    "category": "pii_leakage",
+    "severity": "MEDIUM",
+    "confidence": 0.95,
+    "file": "migrate.go",
+    "line": 343,
+    "description": "Username (online identifier) logged without hashing in V1 export completion message.",
+    "remediation": "Hash username with a random per-session salt before logging, or use a non-reversible user ID reference.",
+    "regulatory_basis": "GDPR Art. 5(1)(f)"
+  }
+]
