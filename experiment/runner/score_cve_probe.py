@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import difflib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -84,7 +85,8 @@ _KEYWORDS: list[tuple[str, str]] = [
     ("eval inj", "eval_injection"),
     ("code inj", "eval_injection"),
     ("deserial", "deserialization"),
-    ("dom", "xss_dom"),
+    ("dom-based", "xss_dom"),
+    ("dom xss", "xss_dom"),
     ("cross-site scripting", "xss"),
     ("cross site scripting", "xss"),
     ("xss", "xss"),
@@ -109,6 +111,8 @@ _KEYWORDS: list[tuple[str, str]] = [
     ("missing authoriz", "auth_bypass"),
     ("improper authoriz", "auth_bypass"),
     ("missing authentic", "auth_bypass"),
+    ("unauthoriz", "auth_bypass"),
+    ("unauthentic", "auth_bypass"),
     ("authoriz", "auth_bypass"),
     ("authentic", "auth_bypass"),
     ("auth bypass", "auth_bypass"),
@@ -135,8 +139,11 @@ def _canon(cat: str, canonical: set[str]) -> str:
     if c in canonical:
         return c
     low = (cat or "").lower()
+    # Word-boundary match so short keywords do not match inside longer words
+    # (e.g. "dom" must not fire on "ran-dom"), while stem prefixes such as
+    # "deserial" still match "deserialization".
     for kw, canon in _KEYWORDS:
-        if kw in low:
+        if re.search(rf"\b{re.escape(kw)}", low):
             return canon
     return c
 

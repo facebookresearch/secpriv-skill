@@ -37,6 +37,8 @@ import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
+from ingest_cve import EXT_LANG  # extension -> language map used to build probe
+
 ROOT = Path(__file__).resolve().parent.parent  # experiment/
 PAPER_ROOT = ROOT.parent  # secpriv_eval/
 RESULTS_DIR = ROOT / "results"
@@ -397,10 +399,11 @@ def run_case(
     timeout: int = DEFAULT_TIMEOUT,
 ) -> CaseResult:
     if case.get("files"):
+        default_lang = case.get("lang", "python")
         blocks = [
             FILE_BLOCK.format(
                 fname=Path(rel).name,
-                lang=case.get("lang", "python"),
+                lang=EXT_LANG.get(Path(rel).suffix, default_lang),
                 code=(ROOT / rel).read_text(),
             )
             for rel in case["files"]
