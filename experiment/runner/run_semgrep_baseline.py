@@ -3,7 +3,6 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-strict
 
 """Semgrep baseline for the D3 real-CVE probe (reviewer D2: fair baseline).
 
