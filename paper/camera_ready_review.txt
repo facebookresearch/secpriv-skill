@@ -1,0 +1,116 @@
+SUBMISSION: 6933
+TITLE: SecPriv: A Unified Multi-Phase Agent Skill for LLM-Assisted Security and Privacy Code Review
+
+----------------------- REVIEW 1 ---------------------
+
+SUBMISSION: 6933
+TITLE: SecPriv: A Unified Multi-Phase Agent Skill for LLM-Assisted Security and Privacy Code Review
+
+----------- Summary -----------
+The paper presents a unified LLM-assisted code-review agent skill. It was designed to identify both security vulnerabilities and privacy violations within a single review pipeline. The authors point out a problem: security and privacy code review are usually treated as separate engineering activities even though both depend on similar reasoning about sources, sinks, transformations, framework protections, and data flows. The authors argue that at least the source-to-sink, transformation-aware subset of the two domains can be handled through shared infrastructure.
+
+SecPriv implements a five-phase framework built three components: a detector, a validator, and a rule-based mapping stage. The detector intentionally over-approximates potential findings. The validator suppresses findings that lack an exploitation path, are protected by frameworks, involve trusted sources, or involve adequate transformations. A semantic memory supplies CWE information for security, GDPR references for privacy, source/sink categories, transformation states, and framework-awareness facts.
+
+A central design idea is the shared transformation-state classifier. Data reaching a sink may be classified as raw, salted-hashed, unsalted-hashed, aggregated, encrypted, tokenized, etc. The same transformation reasoning can suppress inappropriate security or privacy findings. The authors limit the unification claim to source-to-sink and transformation-aware problems rather than authorization logic, IDOR, race conditions, state-machine errors, or other classes requiring runtime or cross-procedural reasoning.
+
+The evaluation has two main parts. First, the authors construct a 128-case controlled benchmark covering 20 security and 10 privacy categories, including positive cases, near-miss negatives, held-out negatives, and cross-domain cases. Moreover, the authors perform an independent code audit and convert the benchmark into multi-label ground truth, correcting three labels and adding 32 secondary vulnerability labels.
+
+Second, external validity is evaluated on 64 real CVEs across seven programming languages from GitHub Security Advisories. Vulnerable pre-patch files serve as positive cases and corresponding post-patch files as negative controls, with patch locations providing localization information. The real-CVE benchmark is security-only because the authors could not construct an analogous real-world privacy corpus.
+
+On the controlled benchmark, SecPriv-Sonnet achieves approximately 0.75 precision, 0.92 recall, and 0.83 F1. The detector-only ablation substantially reduces precision and true-negative rate while leaving recall approximately unchanged, providing evidence that the validator is responsible primarily for false-positive suppression. However, against a coverage-matched two-skill baseline, SecPriv's F1 advantage is not statistically significant. Its more defensible advantages are lower false-positive rates and lower API cost.
+
+On the real-CVE benchmark, SecPriv detects approximately 58% of vulnerabilities, compared with 61% for an unstructured same-model LLM, but generates fewer findings on already-fixed code. The authors characterize SecPriv's contribution as one of precision/noise reduction rather than superior recall.
+----------- Strengths -----------
+The first strength is the clarity and restraint of the central claim. The paper does not attempt to argue that security and privacy are the same problem. It identifies a structural overlap (source-to-sink reasoning with transformation awareness) and lists classes that remain outside the proposed unification. This scoped claim is much more convincing than a broad assertion of unified security/privacy reasoning.
+
+The detector–validator architecture is well motivated. Rather than asking a single LLM call simultaneously to maximize recall and precision, SecPriv separates candidate generation from filtering. The ablation study provides useful empirical evidence that the validator actually performs its intended role: removing the validator decreases precision by approximately 0.17 and true-negative performance by approximately 0.24 while leaving recall unchanged. This is a meaningful architectural result.
+
+A strong aspect of the paper is the authors' attention to fair baselines and ablations. They recognize that comparing SecPriv against two narrow single-domain skills would conflate architectural benefits with differences in category coverage. They construct a coverage-matched two-skill baseline using the same 30-category schema. Moreover, when that fair comparison does not produce a statistically significant F1 improvement, the authors explicitly say so rather than overstating the result. I view this methodological honesty as a strength.
+
+The treatment of ground truth is another positive aspect. The authors noticed that single-label evaluation penalized systems for finding legitimate secondary vulnerabilities, so they conducted an independent code audit blind to model outputs. This audit corrected three mislabels and added 32 code-verified secondary labels across 26 cases. This is substantially more rigorous than simply modifying labels to improve reported model performance.
+
+The real-CVE external-validity evaluation is arguably the paper's strongest empirical contribution. Using real GitHub advisories, pre-/post-patch source pairs, actual commit provenance, seven programming languages, and patch locations provides a useful complement to the synthetic benchmark. The paper appropriately treats the two benchmarks as complementary rather than claiming that either one alone establishes generalization.
+
+I also appreciate the repeated-run evaluation. LLM-based systems are stochastic, and reporting results across N=5 runs with confidence intervals is more convincing than the common practice of reporting one favorable run. The paper further examines confidence thresholds, category normalization, held-out negatives, model-size tradeoffs, and failure modes.
+
+The transformation-classifier micro-benchmark is also methodologically sensible. The authors found that removing the classifier did not noticeably affect the main benchmark because those datasets rarely exercised adequately transformed data. Instead of claiming an effect that was absent, they construct a focused diagnostic benchmark specifically to test that mechanism. On those cases, removing the classifier decreases precision and true-negative performance without increasing recall.
+
+Finally, the paper's conclusions are appropriately calibrated. The authors state that the unified skill is not significantly better in F1 than the fair two-skill baseline, that its supported advantages are false-positive reduction and cost, that real-world vulnerability detection remains approximately 0.6, and that privacy lacks real-world validation. This strengthens my confidence in the overall presentation.
+----------- Weaknesses -----------
+My largest concern is the asymmetry between security and privacy validation. The title and central contribution concern unified security and privacy code review, but the external-validity benchmark evaluates only security vulnerabilities. Privacy performance is established entirely on purpose-built synthetic Python examples. The paper itself acknowledges that “privacy validation remains open” because privacy defects rarely receive CVEs.
+
+This is an understandable data-availability problem, but it remains important because privacy is half of the claimed contribution. A real privacy benchmark does not necessarily have to be CVE-based. The authors could potentially construct an independently annotated corpus of real repositories, privacy-related commits, regulatory enforcement examples that can be traced to code, or code containing independently validated personal-data flows. The evidence supports the security half more strongly than the privacy half.
+
+A related issue concerns the semantic meaning of some privacy suppression rules. For example, a salted hash is treated as adequate enough to suppress some privacy findings, although the authors correctly acknowledge that pseudonymized data can remain personal data under GDPR. Similarly, KMS encryption, tokenization, or aggregation may reduce risk but do not automatically establish lawful processing, purpose limitation, data minimization, consent, or compliance.
+
+The manuscript is careful to call these code-level signals rather than legal compliance determinations, which mitigates this concern. Nevertheless, the distinction should remain extremely prominent because mapping automatically generated findings to GDPR articles could otherwise create a misleading impression of regulatory determination. The privacy component may be better framed consistently as privacy-risk review rather than privacy-compliance validation.
+
+A second major limitation is model generalizability. The controlled experiments appear to use Claude Sonnet and Claude Haiku, which provides variation in model capacity but still represents one model family/provider. Because scaffold effectiveness can interact strongly with the underlying LLM, evaluating at least one substantially different model family would strengthen the claim that the benefit comes from the SecPriv methodology rather than idiosyncrasies of a particular model.
+
+Third, I have reservations about the interpretation of the Semgrep comparison. The paper reports approximately 0.02 detection for Semgrep versus 0.53–0.61 for the LLM configurations and describes an approximately 30× gap. The numerical result may be correct under the stated configuration, but I would recommend presenting this comparison much more cautiously. Semgrep's 690 generic rules are not necessarily designed to recognize every vulnerability represented in the selected CVEs, whereas the LLM receives semantic code context and is credited through vulnerability-family matching. The two systems therefore operate with substantially different detection mechanisms and coverage assumptions. A comparison with CodeQL, language-specific SAST configurations, or advisory-specific applicable rules would make the “LLM versus traditional SAST” conclusion considerably stronger.
+
+The metric for the real-CVE benchmark is intentionally permissive: file-level detection receives credit if a family-matching finding appears anywhere in the vulnerable file. Localized detection is much lower: approximately 0.31 for SecPriv-Sonnet, versus 0.58 at file level. I think the localized result deserves greater prominence because actionable code review depends on locating the actual vulnerable code rather than identifying that some vulnerability of the correct family exists somewhere in a file.
+
+The use of findings on post-patch files as a false-alarm proxy is clever but imperfect. A post-patch file is negative with respect to the vulnerability that was fixed, but it is not necessarily vulnerability-free. Therefore, the 2.5 versus 4.6 “noise” figures should not be interpreted as conventional false-positive rates. The paper calls this a proxy, which is appropriate, but the distinction is important. The hand-adjudication of 25 CVEs is reassuring, but expanding that validation beyond 25 cases would further strengthen this measure.
+
+Another concern is the size and construction of the controlled benchmark. Although 128 cases and 30 categories provide useful diagnostic coverage, the examples are explicitly purpose-built, self-contained Python files of only 30–60 lines. Real vulnerabilities require repository-level context, indirect calls, configuration knowledge, dependency behavior, and multi-file flows. The authors acknowledge this limitation and supplement it with the real-CVE probe, but repository-scale evaluation would still substantially improve the paper. The 12-case transformation micro-benchmark is small. Its purpose as a mechanism-isolation test is reasonable, but statistical significance over five repeated runs should not be mistaken for broad generalizability because the underlying cases remain the same. The results establish that the classifier behaves as intended on these constructs, not that its precision benefit will necessarily transfer to real privacy flows.
+
+Finally, although the authors characterize SecPriv as a “unified” architecture, the strongest controlled comparison shows that its F1 is statistically indistinguishable from running two coverage-matched skills separately. This does not invalidate the contribution (lower cost and fewer false positives are meaningful) but it means that the novelty should continue to be framed as engineering efficiency and shared suppression reasoning, not superior detection effectiveness resulting from unification itself.
+----------- Overall assessment and comments for authors -----------
+SCORE: 1 (weak accept)
+----- TEXT:
+This paper is technically interesting, carefully evaluated, and generally well written. The proposed unification is scoped to source-to-sink, transformation-aware reasoning, and the detector–validator architecture is supported by a meaningful ablation showing that the validator materially improves precision without sacrificing recall. The paper also distinguishes itself through the combination of a controlled benchmark, held-out negative cases, multi-label code auditing, a transformation-specific micro-benchmark, repeated LLM runs, and a real-CVE external-validity probe.
+
+I appreciate that the authors do not overstate negative or null results. The unified system does not significantly outperform a fair two-skill baseline in F1, and the paper says so. Likewise, SecPriv does not outperform the unstructured LLM in real-CVE recall, and the authors instead make the narrower and better-supported claim that it retains comparable detection while reducing false alarms. This restraint makes the empirical argument considerably more credible.
+----------- Compliance with policy on use of AI systems -----------
+SELECTION: yes
+
+
+----------------------- REVIEW 2 ---------------------
+
+SUBMISSION: 6933
+TITLE: SecPriv: A Unified Multi-Phase Agent Skill for LLM-Assisted Security and Privacy Code Review
+
+----------- Summary -----------
+The paper presents SecPriv, an integrated multi-stage agent framework that uses one consistent approach and common tooling to identify both security and privacy issues in source code. The paper is well structured and nicely written.
+----------- Strengths -----------
++ Unified methodology combining detector–validator agents, CWE/GDPR semantic memory, and transformation-aware filtering.
++ Controlled benchmark study showing the validator improves precision.
++ Real-world CVE evaluation by achieving good results.
++ End-to-end evaluation harness providing reproducible benchmarks, CVE ingestion, patch scoring, parsing, normalization, and configuration logging.
+----------- Weaknesses -----------
+- The study considers in the security threats untrusted inputs but does not sufficiently address them throughout the rest of the work.
+- The privacy adversary model is not universal, it's highly related on GDPR regulation
+- It is unclear how the detector traces data from collection points and at what level it can ensure that these collection points have not been compromised.
+----------- Overall assessment and comments for authors -----------
+SCORE: 1 (weak accept)
+----- TEXT:
++ Unified methodology combining detector–validator agents, CWE/GDPR semantic memory, and transformation-aware filtering.
++ Controlled benchmark study showing the validator improves precision.
++ Real-world CVE evaluation by achieving good results.
++ End-to-end evaluation harness providing reproducible benchmarks, CVE ingestion, patch scoring, parsing, normalization, and configuration logging.
+
+- The study considers in the security threats untrusted inputs but does not sufficiently address them throughout the rest of the work.
+- The privacy adversary model is not universal, it's highly related on GDPR regulation
+- It is unclear how the detector traces data from collection points and at what level it can ensure that these collection points have not been compromised.
+----------- Compliance with policy on use of AI systems -----------
+SELECTION: yes
+
+
+----------------------- REVIEW 3 ---------------------
+
+SUBMISSION: 6933
+TITLE: SecPriv: A Unified Multi-Phase Agent Skill for LLM-Assisted Security and Privacy Code Review
+
+----------- Summary -----------
+The paper describes a new framework, SecPriv, that is an Agentic approach to flagging both security and privacy issues in code during review. To test the framework, they use two benchmarks: one with 128 cases and another with 64 real-world cases obtained from GitHub. The dataset covers a wide range of issues and languages. They describe two skills, detector-validator and shared memory, that are added to the model. The authors use Sonnet and Haiku models to test their framework and report results with and without the skills.
+----------- Strengths -----------
+The authors go into detail describing the composition of problems in the benchmarks. Their discussion summarizing the findings is also a positive.
+----------- Weaknesses -----------
+The problem space is described earlier. But the terminology and abbreviations are not defined. It is hard to follow with so many undefined abbreviations. The position summary for Table 1 seems short, and it is unclear what it is communicating. The threat model and reviewer setting section seems unrelated to the paper, could be moved earlier, and does not need a separate section. The agent skills seem specific to the Claude series of models, which is not stated clearly. The authors selected 64 problems for the real-world probe, but they do not state the filtering mechanism used to select the 64. The 128-case and 64-case also look small for this line of research, and relying on only one model family is a concern. Please correct the references; many use et al. in the reference section instead of listing all authors.
+----------- Overall assessment and comments for authors -----------
+SCORE: -2 (reject)
+----- TEXT:
+The problem setting and the way the framework could be used to address it should be expanded and explained in simpler language. A concept diagram would help with making the framework more understandable.
+----------- Compliance with policy on use of AI systems -----------
+SELECTION: yes
